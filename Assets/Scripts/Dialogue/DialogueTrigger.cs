@@ -22,6 +22,12 @@ public class DialogueTrigger : MonoBehaviour
     private bool isPlayerNearby;
     private PlayerMask playerMask;
 
+    [Header("Correct Answer Logic")]
+    [SerializeField] private MaskType correctAnswer; 
+    [SerializeField] private MonoBehaviour customLogic;
+    private bool shouldRun;
+    
+
     private void Update()
     {
         if (!isPlayerNearby) return;
@@ -35,7 +41,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             foreach (var entry in maskDialogues)
             {
-                if (entry.mask == playerMask.CurrentMask)
+                if (entry.mask == playerMask.CurrentMaskType)
                 {
                     chosenDialogue = entry.dialogue;
                     break;
@@ -43,7 +49,11 @@ public class DialogueTrigger : MonoBehaviour
             }
         }
 
-        dialogueManager.StartDialogue(chosenDialogue);
+        if(playerMask.CurrentMaskType == correctAnswer) shouldRun = true;
+
+        playerMask.UnequipMask();
+
+        dialogueManager.StartDialogue(chosenDialogue,customLogic, shouldRun);
         hasPlayed = true;
     }
 

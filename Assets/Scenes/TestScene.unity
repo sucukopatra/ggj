@@ -495,7 +495,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MaskPickup
   maskType: 1
-  mask: {fileID: 442915249}
   maskParent: {fileID: 768762207}
 --- !u!54 &442915255
 Rigidbody:
@@ -723,7 +722,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MaskPickup
   maskType: 2
-  mask: {fileID: 688581023}
   maskParent: {fileID: 768762207}
 --- !u!1 &768762206
 GameObject:
@@ -1319,6 +1317,8 @@ GameObject:
   - component: {fileID: 1607505587}
   - component: {fileID: 1607505591}
   - component: {fileID: 1607505592}
+  - component: {fileID: 1607505593}
+  - component: {fileID: 1607505594}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -1434,7 +1434,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
   dialogueManager: {fileID: 1340813752}
-  defaultDialogue: []
+  defaultDialogue:
+  - speaker: 0
+    text: maske kullanmlaiyim
+    showPortrait: 0
+    expression: 0
   maskDialogues:
   - mask: 1
     dialogue:
@@ -1455,6 +1459,8 @@ MonoBehaviour:
       showPortrait: 0
       expression: 0
   playOnlyOnce: 0
+  correctAnswer: 2
+  customLogic: {fileID: 1607505593}
 --- !u!65 &1607505592
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1476,6 +1482,47 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1607505593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607505586}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79d8167803190424398bf5d5894b9d22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyImpulseLogic
+  objectWithForce: {fileID: 1607505586}
+  impulse: {x: 0, y: 2, z: 0}
+--- !u!54 &1607505594
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607505586}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1633139353 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3376399909107136627, guid: d3c41afa7f4f1e2ff92c7132c12504b1, type: 3}

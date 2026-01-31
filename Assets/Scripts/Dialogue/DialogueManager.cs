@@ -32,6 +32,9 @@ public class DialogueManager : MonoBehaviour
     private Coroutine typingRoutine;
     private bool isTyping;
 
+    private MonoBehaviour customLogic;
+    private bool customRun;
+
     public bool IsDialogueActive { get; private set; }
 
     private Character currentCharacter;
@@ -53,10 +56,13 @@ public class DialogueManager : MonoBehaviour
         AdvanceDialogue();
     }
 
-    public void StartDialogue(Dialogue[] newLines)
+    public void StartDialogue(Dialogue[] newLines, MonoBehaviour script, bool ShouldRun)
     {
         if (IsDialogueActive || newLines == null || newLines.Length == 0)
             return;
+
+        customLogic = script;
+        customRun = ShouldRun;
 
         speakerText.text = "";
         dialogueText.text = "";
@@ -227,6 +233,10 @@ public class DialogueManager : MonoBehaviour
 
         dialogueAnimator.SetBool("IsOpen", false);
 
+        if(customRun)
+        {
+            HandleCustomLogic(customLogic);
+        }
     }
 
     private Character GetCharacter(Speaker speaker)
@@ -236,6 +246,10 @@ public class DialogueManager : MonoBehaviour
                 return c;
 
         return null;
+    }
+    public void HandleCustomLogic(MonoBehaviour script)
+    {
+       script.enabled = true; 
     }
 
     private Sprite GetPortrait(Character character, Expression expression)
