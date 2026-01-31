@@ -28,6 +28,11 @@ public class InputManager : MonoBehaviour
         playerInputs.Enable();
     }
 
+    public bool Submit()
+    {
+        return playerInputs.UI.Submit.WasPressedThisFrame();
+    }
+
     public Vector2 GetPlayerMovement()
     {
         return playerInputs.Player.Move.ReadValue<Vector2>();
@@ -48,7 +53,7 @@ public class InputManager : MonoBehaviour
     }
     public bool Interact()
     {
-        return playerInputs.Player.Interact.triggered;
+        return playerInputs.Player.Interact.WasPressedThisFrame();
     }
 
 }

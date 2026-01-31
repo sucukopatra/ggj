@@ -1,76 +1,65 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+
+[System.Serializable]
+public class MaskDialogue
+{
+    public MaskType mask;
+    public Dialogue[] dialogue;
+}
 
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueManager dialogueManager;
-    [SerializeField] private GameObject interactionSymbol;
-    [SerializeField] private Sprite hasNotInteractedIcon;
-    [SerializeField] private Sprite hasInteractedIcon;
 
+    [Header("Dialogue")]
+    [SerializeField] private Dialogue[] defaultDialogue;
+    [SerializeField] private MaskDialogue[] maskDialogues;
+
+    [Header("Settings")]
     [SerializeField] private bool playOnlyOnce = false;
+
     private bool hasPlayed;
-
-    [SerializeField] private InputAction interactAction;
-    [SerializeField, Tooltip( "Use '|' inside dialogue lines to add a short pause. TMP tags like <i> and <b> are supported for formatting.")]
-    private Dialogue[] dialogue;
-
     private bool isPlayerNearby;
-    private SpriteRenderer iconRenderer;
+    private PlayerMask playerMask;
 
-    private void Awake()
+    private void Update()
     {
-        if (dialogueManager == null)
-            dialogueManager = FindAnyObjectByType<DialogueManager>();
+        if (!isPlayerNearby) return;
+        if (playOnlyOnce && hasPlayed) return;
+        if (dialogueManager.IsDialogueActive) return;
+        if (!InputManager.Instance.Interact()) return;
 
-        if (interactionSymbol == null)
-            return;
+        Dialogue[] chosenDialogue = defaultDialogue;
 
-        iconRenderer = interactionSymbol.GetComponent<SpriteRenderer>();
-        iconRenderer.sprite = hasNotInteractedIcon;
+        if (playerMask != null)
+        {
+            foreach (var entry in maskDialogues)
+            {
+                if (entry.mask == playerMask.CurrentMask)
+                {
+                    chosenDialogue = entry.dialogue;
+                    break;
+                }
+            }
+        }
 
-        interactionSymbol.SetActive(iconRenderer.sprite != null);
-    }
-
-    private void OnEnable()
-    {
-        interactAction.performed += OnInteract;
-        interactAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        interactAction.performed -= OnInteract;
-        interactAction.Disable();
-    }
-
-    private void OnInteract(InputAction.CallbackContext _)
-    {
-        if (!isPlayerNearby)
-            return;
-
-        if (playOnlyOnce && hasPlayed)
-            return;
-
-        dialogueManager.StartDialogue(dialogue);
+        dialogueManager.StartDialogue(chosenDialogue);
         hasPlayed = true;
-
-        if (iconRenderer == null)
-            return;
-
-        iconRenderer.sprite = hasInteractedIcon;
-        interactionSymbol.SetActive(iconRenderer.sprite != null);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-            isPlayerNearby = true;
+        if (!other.CompareTag("Player")) return;
+
+        isPlayerNearby = true;
+        playerMask = other.GetComponent<PlayerMask>();
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-            isPlayerNearby = false;
+        if (!other.CompareTag("Player")) return;
+
+        isPlayerNearby = false;
+        playerMask = null;
     }
 }

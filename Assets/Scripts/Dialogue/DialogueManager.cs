@@ -1,9 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -28,7 +26,6 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float textSpeed = 0.03f;
 
     [Header("Input")]
-    [SerializeField] private InputAction advanceAction;
 
     private Dialogue[] lines;
     private int index;
@@ -50,16 +47,10 @@ public class DialogueManager : MonoBehaviour
         dialogueUI.SetActive(false);
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        advanceAction.performed += OnAdvance;
-        advanceAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        advanceAction.performed -= OnAdvance;
-        advanceAction.Disable();
+        if (!IsDialogueActive || !InputManager.Instance.Submit()) return;
+        AdvanceDialogue();
     }
 
     public void StartDialogue(Dialogue[] newLines)
@@ -81,15 +72,10 @@ public class DialogueManager : MonoBehaviour
         ShowLine();
     }
 
-    private void OnAdvance(InputAction.CallbackContext _)
+    private void AdvanceDialogue()
     {
-        if (!IsDialogueActive)
-            return;
-
         if (isTyping)
-        {
             StopTyping();
-        }
         else
         {
             index++;

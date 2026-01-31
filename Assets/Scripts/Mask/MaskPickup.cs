@@ -1,9 +1,18 @@
 using UnityEngine;
 
+public enum MaskType
+{
+    None,
+    Happy,
+    Sad,
+    Angry
+}
+
 public class MaskPickup : MonoBehaviour
 {
-    [SerializeField] GameObject mask;
-    [SerializeField] Transform maskParent;
+    [SerializeField] private MaskType maskType;
+    [SerializeField] private GameObject mask;
+    [SerializeField] private Transform maskParent;
 
     private bool pickedUp;
 
@@ -11,14 +20,16 @@ public class MaskPickup : MonoBehaviour
     {
         if (pickedUp) return;
         if (!other.CompareTag("Player")) return;
+        if (!InputManager.Instance.Interact()) return;
 
-        if (InputManager.Instance.Interact())
-        {
-            Equip();
-        }
+        var playerMask = other.GetComponent<PlayerMask>();
+        if (playerMask == null) return;
+
+        playerMask.EquipMask(maskType);
+        EquipVisual();
     }
 
-    private void Equip()
+    private void EquipVisual()
     {
         pickedUp = true;
 
