@@ -1,37 +1,46 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class MickScript : MonoBehaviour
 {
     [Header ("Doors")]
-    [SerializeField] Transform DepoDoor;
-    [SerializeField] List<GameObject> WrongDoors;
-    public float duration = 0.5f;
-    private void Start()
+    [SerializeField] GameObject drawer;
+    [SerializeField] GameObject DepoDoor;
+    [SerializeField] private Transform maskParent;
+    private GameObject keyObject;
+    private bool pickedUp = false;
+
+    private void OnEnable()
     {
-        OpenDoor(DepoDoor);
+            drawer.GetComponent<Animator>().Play("Opening 1");
     }
-
-    public void OpenDoor(Transform Door)
+    private void OnTriggerStay(Collider other)
     {
-        StartCoroutine(RotateDoor(Door));
-    }
-
-    private IEnumerator RotateDoor(Transform Door)
-    {
-        Quaternion startRot = Door.rotation;
-        Quaternion endRot = startRot * Quaternion.Euler(90f, 0f, 0f);
-
-        float time = 0f;
-
-        while (time < 1f)
+        if (other.CompareTag("Player") && InputManager.Instance.Interact() && !pickedUp)
         {
-            time += Time.deltaTime / duration;
-            Door.rotation = Quaternion.Slerp(startRot, endRot, time);
-            yield return null;
+            // Equip Key on player
+            EquipKey(gameObject, maskParent);
+            pickedUp = true;
+            DepoDoor.GetComponent<PlayerDoorInteraction>().GiveKey();
         }
-
-        Door.rotation = endRot;
     }
+
+    public void EquipKey(GameObject keyPrefab, Transform maskParent)
+    {
+        keyObject = keyPrefab;
+
+        // Attach to mask parent
+        keyObject.transform.SetParent(maskParent);
+        keyObject.transform.localPosition = Vector3.zero;
+        keyObject.transform.localRotation = Quaternion.identity;
+    }
+
+    public void UnequipKey()
+    {
+        if (keyObject != null)
+        {
+            Destroy(keyObject);
+            keyObject = null;
+        }
+    }
+    
 }
