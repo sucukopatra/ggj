@@ -79,7 +79,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
   dialogueManager: {fileID: 0}
   defaultDialogue: []
-  maskDialogues: []
+  maskDialogues:
+  - mask: 1
+    dialogue:
+    - speaker: 0
+      text: 
+      showPortrait: 0
+      expression: 0
   playOnlyOnce: 0
   correctAnswer: 0
   customLogic: {fileID: 0}

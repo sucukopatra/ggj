@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 5040600389778569463}
   - component: {fileID: 7148461634067115110}
   - component: {fileID: 4523494854516792437}
+  - component: {fileID: 2768657673126877219}
   m_Layer: 0
-  m_Name: NPC1
+  m_Name: Nick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,6 +116,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &2768657673126877219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2405671482941582556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 415cfc4d4fde37bf3866c742a08e6601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MickScript
+  DepoDoor: {fileID: 0}
+  WrongDoors: []
+  duration: 0.5
 --- !u!1001 &3034006317610287637
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,8 +184,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
+      propertyPath: customLogic
+      value: 
+      objectReference: {fileID: 2768657673126877219}
+    - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: correctAnswer
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.size
@@ -197,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[5].mask
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[0].dialogue.Array.size
@@ -302,11 +322,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[4].dialogue.Array.data[0].text
-      value: ' '
+      value: This behavior isn't normal, you are scaring me!
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[4].dialogue.Array.data[1].text
-      value: Don't make me say it.
+      value: Whatever damage there is, it's mine alone.
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[4].dialogue.Array.data[2].text
@@ -327,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[5].dialogue.Array.data[1].text
-      value: Don't make me say it.
+      value: '#@!!'
       objectReference: {fileID: 0}
     - target: {fileID: 2796743879275049095, guid: 6a27f1698503d9046b4164ce07ae8194, type: 3}
       propertyPath: maskDialogues.Array.data[0].dialogue.Array.data[1].speaker
