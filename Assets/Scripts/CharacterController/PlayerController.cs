@@ -2,27 +2,33 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float playerSpeed = 5f;
-    [SerializeField] float jumpHeight = 1.5f;
-    [SerializeField] float gravity = -9.81f;
+    [Header("Movement")]
+    [SerializeField] private float playerSpeed = 5.0f;
+    [SerializeField] private float jumpHeight = 1.5f;
+    [SerializeField] private float gravityValue = -9.81f;
 
-    [SerializeField] float standingHeight = 1.8f;
-    [SerializeField] float crouchHeight = 1.0f;
-    [SerializeField] float crouchSmooth = 10f;
+    [Header("Crouch")]
+    [SerializeField] private float standingHeight = 1.8f;
+    [SerializeField] private float crouchHeight = 1.0f;
+     private float crouchSmooth = 10f;
 
-    [SerializeField] Transform cameraTransform;
-    [SerializeField] float mouseSensitivity = 2.5f;
+    [Header("Mouse Look")]
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private float mouseSensitivity = 2.5f;
 
-    CharacterController controller;
-    Vector3 velocity;
-    float xRotation;
+    private CharacterController controller;
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
 
-    InputManager input;
+    private float xRotation = 0f;
+
+    private InputManager inputManager;
 
     void Start()
     {
+        PauseMenu.IsPaused = false;
         controller = GetComponent<CharacterController>();
-        input = InputManager.Instance;
+        inputManager = InputManager.Instance;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -30,60 +36,51 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleMouseLook();
-        Vector3 move = HandleMovementInput();
-        HandleJump();
-        HandleGravity();
-        HandleCrouch();
-        ApplyMovement(move);
-    }
+        if (PauseMenu.IsPaused)
+            return;
+        groundedPlayer = controller.isGrounded;
 
-    void HandleMouseLook()
-    {
-        Vector2 mouse = input.GetMouseDelta() * mouseSensitivity;
-        xRotation = Mathf.Clamp(xRotation - mouse.y, -89f, 89f);
-        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-        transform.Rotate(Vector3.up * mouse.x);
-    }
+        if (groundedPlayer && playerVelocity.y < -2f)
+            playerVelocity.y = -2f;
 
-    Vector3 HandleMovementInput()
-    {
-        Vector2 inputVec = input.GetPlayerMovement();
-        Vector3 move = new Vector3(inputVec.x, 0, inputVec.y);
+        // ===== MOUSE LOOK =====
+        Vector2 mouseDelta = inputManager.GetMouseDelta() * mouseSensitivity;
+
+        xRotation -= mouseDelta.y;
+        xRotation = Mathf.Clamp(xRotation, -89f, 89f);
+        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+        transform.Rotate(Vector3.up * mouseDelta.x);
+
+        // ===== MOVEMENT =====
+        Vector2 input = inputManager.GetPlayerMovement();
+        Vector3 move = new Vector3(input.x, 0, input.y);
         move = Vector3.ClampMagnitude(move, 1f);
-        return transform.TransformDirection(move);
-    }
 
-    void HandleJump()
-    {
-        if (!controller.isGrounded) return;
+        // Move relative to where the player is looking
+        move = transform.TransformDirection(move);
 
-        if (velocity.y < 0)
-            velocity.y = -2f;
+        // ===== JUMP =====
+        if (groundedPlayer && inputManager.PlayerJumpedThisFrame())
+        {
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravityValue);
+        }
 
-        if (input.PlayerJumpedThisFrame())
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-    }
+        // ===== GRAVITY =====
+        playerVelocity.y += gravityValue * Time.deltaTime;
 
-    void HandleGravity()
-    {
-        velocity.y += gravity * Time.deltaTime;
-    }
+        // ===== CROUCH ======
+        
+         bool crouched = inputManager.IsCrouching();
 
-    void HandleCrouch()
-    {
-        float targetHeight = input.IsCrouching() ? crouchHeight : standingHeight;
-        controller.height = Mathf.Lerp(
-            controller.height,
-            targetHeight,
-            Time.deltaTime * crouchSmooth
-        );
-    }
+         float targetHeight = crouched ? crouchHeight : standingHeight;
 
-    void ApplyMovement(Vector3 move)
-    {
-        controller.Move(
-            (move * playerSpeed + Vector3.up * velocity.y) * Time.deltaTime
-        );
-    }
+         controller.height = Mathf.Lerp(
+             controller.height,
+             targetHeight,
+             Time.deltaTime * crouchSmooth
+         );
+             Vector3 finalMove = move * playerSpeed + Vector3.up * playerVelocity.y;
+             controller.Move(finalMove * Time.deltaTime);
+         }
 }

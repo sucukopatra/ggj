@@ -4,44 +4,48 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public bool isPaused;
+    public static bool IsPaused;
     [SerializeField] InputAction pauseAction;
     [SerializeField] GameObject pauseMenuUI;
 
     private void OnEnable()
     {
         pauseAction.Enable();
-        pauseAction.performed += OnPause;
+        pauseAction.started+= OnPause;
     }
 
     private void OnDisable()
     {
-        pauseAction.performed -= OnPause;
+        pauseAction.started-= OnPause;
         pauseAction.Disable();
     }
 
     private void OnPause(InputAction.CallbackContext context)
     {
-        if (isPaused)
+        if (IsPaused)
             Resume();
         else
             Pause();
     }
 
-    public void Resume()
+
+    void Resume()
     {
+        IsPaused = false;
         Time.timeScale = 1f;
-        isPaused = false;
         pauseMenuUI.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    public void Pause()
+    void Pause()
     {
+        IsPaused = true;
         Time.timeScale = 0f;
-        isPaused = true;
         pauseMenuUI.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
-
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;

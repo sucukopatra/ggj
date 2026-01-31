@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static InputManager Instance { get; private set; }
-
+    public static InputManager Instance;
     private PlayerInputs playerInputs;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -11,9 +10,9 @@ public class InputManager : MonoBehaviour
     {
         if (Instance != null) return;
 
-        GameObject go = new GameObject("InputManager");
-        go.AddComponent<InputManager>();
+        var go = new GameObject("InputManager");
         DontDestroyOnLoad(go);
+        go.AddComponent<InputManager>();
     }
 
     private void Awake()
@@ -26,16 +25,7 @@ public class InputManager : MonoBehaviour
 
         Instance = this;
         playerInputs = new PlayerInputs();
-    }
-
-    private void OnEnable()
-    {
-        playerInputs?.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerInputs?.Disable();
+        playerInputs.Enable();
     }
 
     public Vector2 GetPlayerMovement()
@@ -55,6 +45,10 @@ public class InputManager : MonoBehaviour
     public bool IsCrouching()
     {
         return playerInputs.Player.Crouch.IsPressed();
+    }
+    public bool Interact()
+    {
+        return playerInputs.Player.Interact.triggered;
     }
 
 }
