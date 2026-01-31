@@ -3,10 +3,10 @@ using UnityEngine;
 
 public enum Speaker
 {
-    Player,
-    CharacterA,
-    Narrator,
-    Leyla
+    You,
+    Mick,
+    Rick,
+    Nick
 }
 
 public enum Expression

@@ -1,6 +1,14 @@
 using UnityEngine;
 
-public enum MaskType { None, Happy, Sad, Angry }
+public enum MaskType { 
+    None, 
+    Emphaty, 
+    Surprised,
+    Happy,
+    Scared,
+    Sad, 
+    Angry 
+}
 
 public class MaskPickup : MonoBehaviour
 {
