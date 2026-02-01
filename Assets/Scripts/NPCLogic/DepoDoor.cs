@@ -2,7 +2,6 @@ using UnityEngine;
 public class PlayerDoorInteraction : MonoBehaviour
 {
     private bool hasKey;
-
     public void GiveKey()
     {
         hasKey = true;
@@ -13,7 +12,7 @@ public class PlayerDoorInteraction : MonoBehaviour
         if (!InputManager.Instance.Interact())
             return;
 
-        if (other.CompareTag("DepoDoor") && hasKey)
+        if (other.CompareTag("Player") && hasKey)
         {
             gameObject.GetComponent<Animator>().Play("Opening");
             hasKey = false;

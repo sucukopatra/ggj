@@ -6,7 +6,7 @@ public class MickScript : MonoBehaviour
     [SerializeField] GameObject drawer;
     [SerializeField] GameObject DepoDoor;
     [SerializeField] private Transform maskParent;
-    private GameObject keyObject;
+    [SerializeField] GameObject keyObject;
     private bool pickedUp = false;
 
     private void OnEnable()
